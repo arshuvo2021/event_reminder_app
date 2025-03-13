@@ -8,10 +8,15 @@ use Illuminate\Http\Request;
 class EventController extends Controller
 {
     public function index()
-    {
-        $events = Event::all();
-        return view('events.index', compact('events'));
-    }
+{
+    $today = now()->toDateString();
+
+    $upcomingEvents = Event::where('date', '>=', $today)->orderBy('date', 'asc')->get();
+    $completedEvents = Event::where('date', '<', $today)->orderBy('date', 'desc')->get();
+
+    return view('events.index', compact('upcomingEvents', 'completedEvents'));
+}
+
 
     public function create()
     {

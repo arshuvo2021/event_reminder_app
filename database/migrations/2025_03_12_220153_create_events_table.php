@@ -10,7 +10,7 @@ class CreateEventsTable extends Migration
 {
     Schema::create('events', function (Blueprint $table) {
         $table->id();
-        $table->string('event_reminder_id')->unique(); // Ensure it is generated before inserting
+        $table->string('event_reminder_id')->unique()->nullable(); // Allow it to be generated dynamically
         $table->string('title');
         $table->date('date');
         $table->text('description')->nullable();
