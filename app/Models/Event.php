@@ -11,6 +11,17 @@ class Event extends Model
 
     protected $fillable = ['title', 'date', 'description', 'event_reminder_id'];
 
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($event) {
+            if (empty($event->event_reminder_id)) {
+                $event->event_reminder_id = 'EVT-' . strtoupper(uniqid());
+            }
+        });
+    }
+
     public function participants()
     {
         return $this->hasMany(EventParticipant::class);

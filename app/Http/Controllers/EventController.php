@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEventRequest;
-use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
@@ -11,7 +9,7 @@ class EventController extends Controller
 {
     public function index()
     {
-        $events = Event::orderBy('date')->get();
+        $events = Event::all();
         return view('events.index', compact('events'));
     }
 
@@ -20,11 +18,21 @@ class EventController extends Controller
         return view('events.create');
     }
 
-    public function store(StoreEventRequest $request)
+    public function store(Request $request)
     {
-        Event::create($request->validated());
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'date' => 'required|date',
+            'description' => 'nullable|string',
+        ]);
 
-        return redirect()->route('events.index')->with('success', 'Event created successfully!');
+        Event::create([
+            'title' => $request->title,
+            'date' => $request->date,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('events.index')->with('success', 'Event created successfully.');
     }
 
     public function show(Event $event)
@@ -37,17 +45,26 @@ class EventController extends Controller
         return view('events.edit', compact('event'));
     }
 
-    public function update(UpdateEventRequest $request, Event $event)
+    public function update(Request $request, Event $event)
     {
-        $event->update($request->validated());
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'date' => 'required|date',
+            'description' => 'nullable|string',
+        ]);
 
-        return redirect()->route('events.index')->with('success', 'Event updated successfully!');
+        $event->update([
+            'title' => $request->title,
+            'date' => $request->date,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('events.index')->with('success', 'Event updated successfully.');
     }
 
     public function destroy(Event $event)
     {
         $event->delete();
-
-        return redirect()->route('events.index')->with('success', 'Event deleted successfully!');
+        return redirect()->route('events.index')->with('success', 'Event deleted successfully.');
     }
 }
