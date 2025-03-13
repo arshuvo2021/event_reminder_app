@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
     public function index()
-{
-    $today = now()->toDateString();
+    {
+        $today = now()->toDateString();
 
-    $upcomingEvents = Event::where('date', '>=', $today)->orderBy('date', 'asc')->get();
-    $completedEvents = Event::where('date', '<', $today)->orderBy('date', 'desc')->get();
+        $upcomingEvents = Event::where('date', '>=', $today)->orderBy('date', 'asc')->get();
+        $completedEvents = Event::where('date', '<', $today)->orderBy('date', 'desc')->get();
 
-    return view('events.index', compact('upcomingEvents', 'completedEvents'));
-}
-
+        return view('events.index', compact('upcomingEvents', 'completedEvents'));
+    }
 
     public function create()
     {
@@ -72,4 +72,17 @@ class EventController extends Controller
         $event->delete();
         return redirect()->route('events.index')->with('success', 'Event deleted successfully.');
     }
+
+    public function upcoming()
+{
+    $events = Event::where('date', '>=', Carbon::today())->orderBy('date')->get();
+    return view('events.upcoming', compact('events'));
+}
+
+public function completed()
+{
+    $events = Event::where('date', '<', Carbon::today())->orderBy('date', 'desc')->get();
+    return view('events.completed', compact('events'));
+}
+
 }

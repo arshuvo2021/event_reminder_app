@@ -12,6 +12,9 @@
             </div>
         @endif
 
+        <a href="{{ route('events.upcoming') }}" class="btn btn-info mb-3">Upcoming Events</a>
+        <a href="{{ route('events.completed') }}" class="btn btn-secondary mb-3">Completed Events</a>
+        
         <h3>Upcoming Events</h3>
         @if($upcomingEvents->isEmpty())
             <p>No upcoming events.</p>

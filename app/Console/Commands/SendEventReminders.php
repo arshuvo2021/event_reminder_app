@@ -11,18 +11,17 @@ use Carbon\Carbon;
 class SendEventReminders extends Command
 {
     protected $signature = 'reminders:send';
-    protected $description = 'Send email reminders for upcoming events';
+    protected $description = 'Send email reminders for events happening tomorrow';
 
     public function handle()
     {
         $tomorrow = Carbon::tomorrow()->toDateString();
-
         $events = Event::where('date', $tomorrow)->get();
 
         foreach ($events as $event) {
             Mail::to('user@example.com')->send(new EventReminderMail($event));
         }
 
-        $this->info('Event reminders sent successfully.');
+        $this->info('Event reminders sent successfully!');
     }
 }
