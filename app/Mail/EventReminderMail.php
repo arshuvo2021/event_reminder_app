@@ -20,7 +20,7 @@ class EventReminderMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Reminder: Upcoming Event Tomorrow!')
+        return $this->subject('Event Reminder')
                     ->view('emails.event_reminder');
     }
 }

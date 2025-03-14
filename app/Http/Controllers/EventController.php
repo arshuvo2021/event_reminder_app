@@ -23,22 +23,32 @@ class EventController extends Controller
         return view('events.create');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'date' => 'required|date',
-            'description' => 'nullable|string',
-        ]);
+    public function store(Request $request, $eventId)
+{
+    // Validate the incoming request
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email', // Ensure email is required and valid
+    ]);
 
-        Event::create([
-            'title' => $request->title,
-            'date' => $request->date,
-            'description' => $request->description,
-        ]);
+    // Debug the request data using dd to ensure it's coming through correctly
+    dd($request->all());  // Remove after confirming data is correct
 
-        return redirect()->route('events.index')->with('success', 'Event created successfully.');
-    }
+    // Find the event by ID
+    $event = Event::findOrFail($eventId);
+
+    // Create a new participant and save it
+    $participant = new EventParticipant([
+        'name' => $request->name,
+        'email' => $request->email,
+    ]);
+
+    // Save the participant to the event's participants relationship
+    $event->participants()->save($participant);
+
+    // Redirect with a success message
+    return redirect()->route('events.show', $eventId)->with('success', 'Participant added successfully.');
+}
 
     public function show(Event $event)
     {

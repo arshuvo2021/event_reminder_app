@@ -9,12 +9,12 @@ class Event extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'date', 'description', 'event_reminder_id'];
+    protected $fillable = ['title', 'date', 'description', 'event_reminder_id', 'status'];
 
     protected static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($event) {
             if (empty($event->event_reminder_id)) {
                 $event->event_reminder_id = 'EVT-' . strtoupper(uniqid());
@@ -22,6 +22,7 @@ class Event extends Model
         });
     }
 
+    // Relationship to EventParticipant
     public function participants()
     {
         return $this->hasMany(EventParticipant::class);

@@ -9,7 +9,8 @@ class EventParticipant extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['event_id', 'user_email'];
+    // Update the fillable property to match the actual database column
+    protected $fillable = ['event_id', 'name', 'email'];  // Make sure to use 'email' instead of 'user_email'
 
     public function event()
     {
