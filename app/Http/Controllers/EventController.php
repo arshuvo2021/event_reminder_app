@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Mail\EventReminderEmail;  // Correct import statement
 use App\Models\Event;
 use App\Models\EventReminderEmail as ReminderEmailModel;  // Import the model for reminders if needed
+use App\Models\EventParticipant; // Make sure this is imported
+use App\Models\EmailReminder;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
-
 use Illuminate\Http\Request;
-
 
 class EventController extends Controller
 {
@@ -68,7 +68,7 @@ class EventController extends Controller
         $reminderTime = Carbon::parse($event->date)->subDay();
 
         // Create reminder entry for the participant
-        EventReminderEmail::create([
+        ReminderEmailModel::create([
             'event_id' => $event->id,
             'email' => $participant->email,
             'reminder_time' => $reminderTime,
@@ -122,37 +122,41 @@ class EventController extends Controller
         return view('events.completed', compact('events'));
     }
 
- 
-
-   public function sendReminderEmails()
-    {
-        // Retrieve all reminder emails with events
-        $reminderEmails = ReminderEmailModel::with('event')->where('reminder_time', '<=', now())->get();
-
-        foreach ($reminderEmails as $reminderEmail) {
-            // Send the reminder email to each recipient
-            Mail::to($reminderEmail->email)->send(new EventReminderEmail($reminderEmail->event, $reminderEmail->reminder_time));
-        }
-
-        // Return a response after sending reminders
-        return response()->json(['message' => 'Reminder emails sent successfully.']);
-    }
-
-    public function syncEvents(Request $request)
+    // Send reminder emails to participants based on the reminder time
+    public function sendReminderEmails()
 {
-    $eventsData = $request->all();
+    $reminders = EmailReminder::with('event')
+        ->whereNull('sent_at') // Only send emails that haven't been sent
+        ->whereHas('event', function ($query) {
+            $query->where('date', '=', now()->toDateString()); // Send on event day
+        })
+        ->get();
 
-    // Loop through the events data and save them to the database
-    foreach ($eventsData as $eventData) {
-        Event::create([
-            'title' => $eventData['title'],
-            'date' => $eventData['date'],
-            'description' => $eventData['description'],
-        ]);
+    foreach ($reminders as $reminder) {
+        Mail::to($reminder->email)->send(new EventReminderEmail($reminder->event));
+
+        // Mark email as sent
+        $reminder->update(['sent_at' => now()]);
     }
 
-    return response()->json(['message' => 'Events synced successfully!']);
+    return response()->json(['message' => 'Reminder emails sent successfully.']);
 }
 
 
+    // Sync events (for importing events from external sources)
+    public function syncEvents(Request $request)
+    {
+        $eventsData = $request->all();
+
+        // Loop through the events data and save them to the database
+        foreach ($eventsData as $eventData) {
+            Event::create([
+                'title' => $eventData['title'],
+                'date' => $eventData['date'],
+                'description' => $eventData['description'],
+            ]);
+        }
+
+        return response()->json(['message' => 'Events synced successfully!']);
+    }
 }

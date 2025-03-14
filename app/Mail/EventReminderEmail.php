@@ -4,55 +4,36 @@ namespace App\Mail;
 
 use App\Models\Event;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class EventReminderEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $event;  // Add event property to hold the event data
-    public $reminderTime;  // Add reminderTime to pass it to the email view
+    public $event;
+    public $reminderTime;
 
     /**
      * Create a new message instance.
+     *
+     * @param Event $event
+     * @param string $reminderTime
      */
-    public function __construct(Event $event, $reminderTime)
+    public function __construct($event, $reminderTime)
     {
         $this->event = $event;
         $this->reminderTime = $reminderTime;
     }
-
-    /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
+    
+    public function build()
     {
-        return new Envelope(
-            subject: 'Event Reminder Email',
-        );
+        return $this->subject('Event Reminder')
+                    ->view('emails.eventReminder')
+                    ->with([
+                        'event' => $this->event,
+                        'reminder_time' => $this->reminderTime,
+                    ]);
     }
-
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'emails.event_reminder',  // Specify your email view here
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
-    }
+    
 }
