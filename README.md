@@ -8,7 +8,7 @@ The **Event Reminder App** is a Laravel-based application that allows users to c
 
 ### 1️⃣ Clone the Repository
 ```sh
-git clone https://github.com/your-username/event-reminder-app.git
+git clone https://github.com/arshuvo2021/event_reminder_app.git
 cd event-reminder-app
 ```
 
