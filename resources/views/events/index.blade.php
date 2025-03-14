@@ -1,50 +1,56 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <h2 class="mb-3">Event Reminder App</h2>
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center text-primary">Event Reminder App</h2>
 
-        <!-- Button to Create Event -->
-        <a href="{{ route('events.create') }}" class="btn btn-primary mb-3">Create Event</a>
+       <!-- Success Message -->
+@if(session('success'))
+<div id="success-message" class="alert alert-success mb-4">
+    {{ session('success') }}
+</div>
 
-        <!-- Success Message -->
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+<script>
+    setTimeout(() => {
+        let successMessage = document.getElementById('success-message');
+        if (successMessage) {
+            successMessage.style.transition = "opacity 0.5s";
+            successMessage.style.opacity = "0";
+            setTimeout(() => successMessage.remove(), 500); // Remove it after fade-out
+        }
+    }, 3000);
+</script>
+@endif
 
-        <!-- Upcoming Events Button -->
-        <a href="{{ route('events.upcoming') }}" class="btn btn-info mb-3">Upcoming Events</a>
-
-        <!-- Completed Events Button -->
-        <a href="{{ route('events.completed') }}" class="btn btn-secondary mb-3">Completed Events</a>
 
         <!-- Display Upcoming Events -->
-        <h3>Upcoming Events</h3>
+        <h3 class="mt-4">Upcoming Events</h3>
         @if($upcomingEvents->isEmpty())
             <p>No upcoming events.</p>
         @else
-            <ul class="list-group">
+            <div class="row">
                 @foreach ($upcomingEvents as $event)
-                    <li class="list-group-item">
-                        <strong>{{ $event->title }}</strong> - {{ $event->date }}
-                        
-                        <!-- Add Participant Button -->
-                        <a href="{{ route('events.show', $event->id) }}" class="btn btn-sm btn-info">Add Participant</a>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $event->title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ $event->date }}</h6>
+                                <p class="card-text">Event Description or Brief Information goes here.</p>
 
-                        <!-- Edit Event Button -->
-                        <a href="{{ route('events.edit', $event->id) }}" class="btn btn-sm btn-warning">Edit</a>
-
-                        <!-- Delete Event Button -->
-                        <form action="{{ route('events.destroy', $event->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                        </form>
-                    </li>
+                                <div class="text-center">
+                                    <a href="{{ route('events.show', $event->id) }}" class="btn btn-info btn-sm mx-1">Add Participant</a>
+                                    <a href="{{ route('events.edit', $event->id) }}" class="btn btn-warning btn-sm mx-1">Edit</a>
+                                    <form action="{{ route('events.destroy', $event->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm mx-1">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
-            </ul>
+            </div>
         @endif
 
         <!-- Display Completed Events -->
@@ -52,16 +58,23 @@
         @if($completedEvents->isEmpty())
             <p>No completed events.</p>
         @else
-            <ul class="list-group">
+            <div class="row">
                 @foreach ($completedEvents as $event)
-                    <li class="list-group-item">
-                        <strong>{{ $event->title }}</strong> - {{ $event->date }}
-                        
-                        <!-- Add Participant Button -->
-                        <a href="{{ route('events.show', $event->id) }}" class="btn btn-sm btn-info">Add Participant</a>
-                    </li>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $event->title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ $event->date }}</h6>
+                                <p class="card-text">Event Description or Brief Information goes here.</p>
+
+                                <div class="text-center">
+                                    <a href="{{ route('events.show', $event->id) }}" class="btn btn-info btn-sm mx-1">Add Participant</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
-            </ul>
+            </div>
         @endif
     </div>
 @endsection

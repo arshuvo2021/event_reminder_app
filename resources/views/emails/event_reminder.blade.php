@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Reminder</title>
 </head>
 <body>
-    <h1>Reminder: {{ $event->title }}</h1>
-    <p>This is a reminder for the event happening on {{ $event->date }}.</p>
-    <p>Description: {{ $event->description }}</p>
+    <h1>Reminder for Event: {{ $event->title }}</h1>
+    <p>This is a reminder that the event "{{ $event->title }}" will take place on {{ $event->date }}.</p>
+    <p>We hope to see you there!</p>
+    <p>Reminder set for: {{ $reminderTime }}</p>
 </body>
 </html>
