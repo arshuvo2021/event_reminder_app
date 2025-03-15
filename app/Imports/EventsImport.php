@@ -5,7 +5,7 @@ namespace App\Imports;
 
 use App\Models\Event;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithHeadingRow; // Ensures the first row is treated as column names
+use Maatwebsite\Excel\Concerns\WithHeadingRow; 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 

@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\EventReminderEmail;  // Make sure to import your Mailable class
+use App\Mail\EventReminderEmail;  
 
 class SendTestEmail extends Command
 {
@@ -19,7 +19,7 @@ class SendTestEmail extends Command
     public function handle()
     {
         $email = 'test@example.com'; // The recipient email address
-        $event = 'Sample Event';     // Example event data
+        $event = 'Sample Event';     
 
         // Send the test email
         Mail::to($email)->send(new EventReminderEmail($event));

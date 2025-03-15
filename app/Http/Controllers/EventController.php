@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\EventReminderEmail;  // Correct import statement
+use App\Mail\EventReminderEmail;  
 use App\Models\Event;
-use App\Models\EventReminderEmail as ReminderEmailModel;  // Import the model for reminders if needed
-use App\Models\EventParticipant; // Make sure this is imported
+use App\Models\EventReminderEmail as ReminderEmailModel;  
+use App\Models\EventParticipant; 
 use App\Models\EmailReminder;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
@@ -52,16 +52,13 @@ class EventController extends Controller
             'email' => 'required|email',
         ]);
 
-        // Find the event by ID
         $event = Event::findOrFail($eventId);
 
-        // Create a new participant and save it
         $participant = new EventParticipant([
             'name' => $request->name,
             'email' => $request->email,
         ]);
 
-        // Save the participant to the event's participants relationship
         $event->participants()->save($participant);
 
         // Set up the email reminder time to 1 day before the event

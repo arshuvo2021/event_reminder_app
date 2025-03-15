@@ -10,7 +10,7 @@ class ImportController extends Controller
 {
     public function showImportForm()
     {
-        return view('events.import'); // Ensure this Blade file exists
+        return view('events.import'); 
     }
 
     public function import(Request $request)
@@ -21,7 +21,7 @@ class ImportController extends Controller
 
         \Log::info('File received: ', [$request->file('file')->getClientOriginalName()]);
 
-        Excel::import(new EventsImport, $request->file('file')); // Ensure the correct import class is used
+        Excel::import(new EventsImport, $request->file('file')); 
 
         \Log::info('Import completed');
 
