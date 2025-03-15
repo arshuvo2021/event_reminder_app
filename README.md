@@ -83,7 +83,6 @@ For automatic execution, add the following line to your **crontab**:
 ✔ CSV Import for Bulk Event Upload
 ✔ Event Syncing & Offline Support
 ✔ Laravel Console Commands & Jobs for Processing
-✔ Vue Components for Interactive UI
 
 ---
 ### 📝 Author
